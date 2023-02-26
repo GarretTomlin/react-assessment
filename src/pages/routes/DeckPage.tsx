@@ -68,7 +68,9 @@ function DeckPage() {
         <div className="card  justify-center w-72 h-96 bg-white shadow-xl mt-10  ">
           <div className="bg-[#969696] p-6 rounded-t-lg">
  <DeckInnerCardControls
+ personData={person} fromDeckName={deck.name}
                 onDelete={() => handleDeletePerson(person.name)}
+                
               />
             <div className="absolute left-0 right-0 top-0 z-50 mr-3 mt-4"></div>
 

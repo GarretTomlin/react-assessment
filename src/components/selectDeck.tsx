@@ -9,9 +9,8 @@ interface Deck {
 
 interface SelectDeckProps {
   isOpen: boolean;
-  onClose: () => void;
-  handleDeckSelect: (deckName: string, personData: any) => void; // Accept personData as a parameter
-  personData: any[]; // Define a prop for personData
+  handleDeckSelect: (deckName: string, personData: any, fromDeckName?: string) => void;
+  personData?: any[]; // Define a prop for personData
 }
 
 const SelectDeck: React.FC<SelectDeckProps> = ({ isOpen, handleDeckSelect, personData }) => {
@@ -26,21 +25,30 @@ const SelectDeck: React.FC<SelectDeckProps> = ({ isOpen, handleDeckSelect, perso
     }
   }, []);
 
-  
   const handleClick = (deckName: string) => {
     const deckIndex = decks.findIndex((deck) => deck.name === deckName);
     if (deckIndex !== -1) {
       const updatedDecks = [...decks];
-      const deck = updatedDecks[deckIndex];
-      const updatedPersonData = Array.isArray(deck.personData) ? [...deck.personData, personData] : [personData];
-      const updatedDeck = { ...deck, personData: updatedPersonData };
+      const currentDeck = updatedDecks[deckIndex];
+      const currentPersonData = currentDeck.personData || [];
+      const updatedPersonData = [...currentPersonData, personData];
+      const updatedDeck = { ...currentDeck, personData: updatedPersonData };
       updatedDecks[deckIndex] = updatedDeck;
       setDecks(updatedDecks);
       localStorage.setItem('deck', JSON.stringify(updatedDecks));
-      handleDeckSelect(deckName, updatedPersonData);
+      const fromDeckIndex = decks.findIndex((deck) => deck.personData?.includes(personData));
+      if (fromDeckIndex !== -1) {
+        const fromDeckName = decks[fromDeckIndex].name;
+        const fromDeck = { ...decks[fromDeckIndex], personData: decks[fromDeckIndex].personData?.filter((data) => data !== personData) };
+        updatedDecks[fromDeckIndex] = fromDeck;
+        setDecks(updatedDecks);
+        localStorage.setItem('deck', JSON.stringify(updatedDecks));
+        handleDeckSelect(deckName, updatedPersonData, fromDeckName);
+      } else {
+        handleDeckSelect(deckName, updatedPersonData);
+      }
     }
   };
-  
   
   
   
