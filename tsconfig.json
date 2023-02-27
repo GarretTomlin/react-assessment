@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "postcss.config.cjs"],
+  "include": ["src", "postcss.config.cjs", "node_modules/@types/keycloak-js/keycloak.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -8,6 +8,7 @@ function Deck() {
     name: string;
     icon: string;
     bgColor: string;
+    personData?: any
   }
 
   const [isCreateDeckOpen, setIsCreateDeckOpen] = useState(false);
@@ -93,7 +94,7 @@ function Deck() {
               </div>
               <div className="card-body relative">
                 <div className="flex justify-between">
-                  <span className="text-[#3B3B3B] text-7xl mt-40">13</span>
+                  <span className="text-[#3B3B3B] text-7xl mt-40">      {deck.personData.length}</span>
                   <span className="text-black mt-40">Total Card</span>
                 </div>
               </div>

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import jwtDecode from "jwt-decode";
 import MenuItem from "./MenuItems";
 
 interface MenuProps {
@@ -7,6 +8,16 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({ onItemClick, selectedItem }) => {
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      const decodedToken = jwtDecode<{ name: string }>(accessToken);
+      setUserName(decodedToken.name);
+    }
+  }, []);
+
   return (
     <div className="flex justify-between items-center">
       <div className="flex flex-row items-center space-x-1 flex-grow">
@@ -27,12 +38,14 @@ const Menu: React.FC<MenuProps> = ({ onItemClick, selectedItem }) => {
         </h3>
       </div>
       <div className="flex">
-        <MenuItem
-          label="Garret"
-          isSelected={selectedItem === "Garret"}
-          onClick={() => onItemClick("Garret")}
-          className="ml-auto"
-        />
+        {userName && (
+          <MenuItem
+            label={userName}
+            isSelected={selectedItem === userName}
+            onClick={() => onItemClick(userName)}
+            className="ml-auto"
+          />
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import debounce from "lodash/debounce";
 import CardListControls from "./CardListControls";
 import DeckCardControls from "./DeckCardControls";
+import PaginationButton from "./PaginationButton";
 
 interface Person {
   species: string;
@@ -25,12 +26,20 @@ function Card() {
   const [people, setPeople] = useState<Person[]>([]);
   const [speciesMap, setSpeciesMap] = useState<Record<string, string>>({});
   const [homeworld, setHomeworld] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
 
-  const fetchPeople = async () => {
-    const response = await fetch("https://swapi.dev/api/people/?page=3");
+  const fetchPeople = async (page: number) => {
+    const response = await fetch(`https://swapi.dev/api/people/?page=${page}`);
     const data = await response.json();
     setPeople(data.results);
+    setPageCount(Math.ceil(data.count / 10));
   };
+
+  const handlePageChange = (newPage: number) => {
+  setCurrentPage(newPage);
+};
+
 
   const fetchSpecies = useCallback(
     async (speciesUrls: string[]) => {
@@ -66,8 +75,8 @@ function Card() {
   );
 
   useEffect(() => {
-    fetchPeople();
-  }, []);
+    fetchPeople(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     if (people.length > 0) {
@@ -138,6 +147,9 @@ function Card() {
         </div>
       ))}
     </div>
+    <PaginationButton  currentPage={currentPage}
+     pageCount={pageCount}
+     onPageChange={handlePageChange}/>
     </>
     
   );

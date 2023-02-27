@@ -49,9 +49,6 @@ const SelectDeck: React.FC<SelectDeckProps> = ({ isOpen, handleDeckSelect, perso
       }
     }
   };
-  
-  
-  
   return (
     <div className={`card justify-center w-[216px] h-[171px] bg-[#EDEDED] shadow-xl mt-10 relative float-right ${isOpen ? '' : 'hidden'}`}>
       <div className="card-body">
